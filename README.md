@@ -1,6 +1,19 @@
 🔐 Backup Automático de Firewalls OPNSense com Ansible + Notificação por E-mail
 
 
+
+
+
+
+"Este projeto não armazena informações sensíveis diretamente. Dados de acesso devem ser armazenados localmente e com segurança fora do versionamento."
+
+
+
+
+
+
+
+
 Este repositório contém um script em Python que automatiza backups de firewalls OPNSense via Ansible, e envia alertas por e-mail em caso de falha (com opção de ativar envio em caso de sucesso também).
 
 ESTRUTURA DO PROJETO
