@@ -1,0 +1,21 @@
+---
+- name: Realizar backup dos Firewalls
+  hosts: Firewalls
+  gather_facts: yes
+
+  vars:
+    ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+
+  tasks:
+    - name: Criar diretório local para o backup
+      delegate_to: localhost
+      file:
+        path: "/home/user/Documents/Backups/{{ inventory_hostname }}/{{ ansible_date_time.date }}_{{ ansible_date_time.hour }}{{ ansible_date_time.minute }}"
+        state: directory
+        mode: '0755'
+
+    - name: Copiar backups dos Firewalls
+      fetch:
+        src: /conf/config.xml
+        dest: "/home/user/Documents/Backups/{{ inventory_hostname }}/{{ ansible_date_time.date }}_{{ ansible_date_time.hour }}{{ ansible_date_time.minute }}/"
+        flat: yes

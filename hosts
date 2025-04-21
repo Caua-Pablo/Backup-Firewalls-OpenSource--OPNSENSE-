@@ -1,0 +1,2 @@
+[Firewalls]
+IDENTIFICACAO_DO_FW ansible_host= ansible_user= ansible_python_interpreter=/usr/local/bin/python3 ansible_port=
