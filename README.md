@@ -44,6 +44,68 @@ FIREWALL_TESTE ansible_host=IP ansible_user=user ansible_python_interpreter=/usr
 
 
 
+2. Arquivo de credenciais (password.json)
+
+{
+  "EMAIL": "seu@email.com",
+  "PASSWORD": "sua_senha"
+}
 
 
 
+3. Chave SSH
+
+Você precisa de uma chave privada configurada para acessar os dispositivos. O script suporta 2 formas de uso:
+🔁 Opção 1: Temporária (recarregada a cada execução)
+
+Já está implementado no run_backup.py:
+
+ssh-agent bash -c './run_backup.py'
+
+Ou rode diretamente:
+
+python3 run_backup.py
+
+💾 Opção 2: Persistente no boot (via systemd)
+
+Crie um serviço para o ssh-agent no boot. Exemplo:
+
+nano ~/.config/systemd/user/ssh-agent.service
+
+[Unit]
+Description=SSH key agent
+
+[Service]
+Type=simple
+Environment=SSH_AUTH_SOCK=%t/ssh-agent.socket
+ExecStart=/usr/bin/ssh-agent -D
+
+[Install]
+WantedBy=default.target
+
+Ative com:
+
+systemctl --user enable --now ssh-agent
+
+🧪 Como executar
+Rodar backup para todos os firewalls:
+
+python3 run_backup.py
+
+Rodar manualmente apenas para um host:
+
+ansible-playbook -i hosts backup_opnsense.yml --limit Firewall_Teste
+
+Testar conectividade:
+
+ansible -i hosts Firewall_Teste -m ping
+
+📬 Envio de e-mail
+
+Por padrão, o script envia e-mail apenas quando houver falha no backup.
+💡 (Opcional) Quer testar envio em caso de sucesso?
+
+Você pode adicionar uma função send_success_email() e chamar após backups bem-sucedidos. Exemplo:
+
+if not failed_firewalls:
+    send_success_email()
